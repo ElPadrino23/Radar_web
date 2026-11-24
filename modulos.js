@@ -148,12 +148,12 @@ const MODULOS = [
     id: 'mod3',
     titulo: 'Tools: Azure Tool',
     oculto: true,
-    descripcion: 'Seguimos trabajando en este modulo',
+    descripcion: 'Herramienta de Azure: extrae los datos del log para la bitacora.',
     video: '',
-    entrada: 'Sigo terminando la logica de esta parte',
+    entrada: 'Coloca aqui el log :)',
     ejecutar: function (texto) {
-      // TODO: aqui va la logica del modulo 3 (port del Python a JavaScript).
-      throw new Error('La lógica de este módulo todavía no está conectada.');
+      // Misma logica que el Modulo 2 (Azure Tools).
+      return MODULOS[0].ejecutar(texto);
     }
   },
   {
