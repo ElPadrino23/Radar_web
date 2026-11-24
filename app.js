@@ -83,6 +83,7 @@
   function mostrarModulo(id) {
     document.querySelectorAll('.modulo').forEach(function (s) {
       s.hidden = s.dataset.id !== id;
+      if (!s.hidden && typeof s.cargar === 'function') s.cargar();
     });
     document.querySelectorAll('#menu button').forEach(function (b) {
       b.setAttribute('aria-selected', String(b.dataset.id === id));
@@ -150,6 +151,8 @@
     p.textContent = m.descripcion || '';
     sec.append(h, p);
 
+    if (m.coleccion) return crearSeccionCompartida(m, sec);
+
     if (m.abrirUrl) {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -215,6 +218,94 @@
       setTimeout(function () { btnCopiar.textContent = 'Copiar resultado'; }, 1500);
     });
 
+    return sec;
+  }
+
+  // ------------------------------------------------------------------
+  // Modulos compartidos (4 y 5): texto y enlaces visibles para todo el SOC
+  // ------------------------------------------------------------------
+  function crearSeccionCompartida(m, sec) {
+    const lista = document.createElement('ul');
+    const campoTexto = document.createElement('textarea');
+    campoTexto.rows = 3;
+    campoTexto.cols = 70;
+    campoTexto.placeholder = 'Escribe el texto de tu hallazgo';
+    const campoEnlace = document.createElement('input');
+    campoEnlace.type = 'url';
+    campoEnlace.size = 70;
+    campoEnlace.placeholder = 'https://... (enlace al archivo)';
+    const btnAgregar = document.createElement('button');
+    btnAgregar.type = 'button';
+    btnAgregar.textContent = 'Agregar';
+    const msg = document.createElement('p');
+    msg.setAttribute('role', 'status');
+
+    if (m.pedirTexto) sec.append(campoTexto, document.createElement('br'));
+    sec.append(campoEnlace, document.createElement('br'), btnAgregar, msg, lista);
+
+    function agregarItem(texto) {
+      const li = document.createElement('li');
+      li.appendChild(document.createTextNode(texto));
+      lista.appendChild(li);
+      return li;
+    }
+
+    async function cargar() {
+      lista.textContent = '';
+      try {
+        const snap = await db.collection(m.coleccion).orderBy('fecha', 'desc').limit(200).get();
+        if (snap.empty) { agregarItem('Todavía no hay registros.'); return; }
+        snap.forEach(function (doc) {
+          const d = doc.data();
+          const li = document.createElement('li');
+          const href = enlaceSeguro(d.enlace || '');
+          if (href) {
+            const a = document.createElement('a');
+            a.href = href;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.textContent = href;
+            li.appendChild(a);
+          } else {
+            li.appendChild(document.createTextNode(d.enlace || ''));
+          }
+          if (d.texto) li.appendChild(document.createTextNode(' — ' + d.texto));
+          const fecha = d.fecha && d.fecha.toDate ? d.fecha.toDate().toLocaleString() : '';
+          li.appendChild(document.createTextNode(' (' + (d.autor || '') + (fecha ? ', ' + fecha : '') + ')'));
+          lista.appendChild(li);
+        });
+      } catch (err) {
+        msg.textContent = 'No se pudo cargar: ' + err.message;
+      }
+    }
+
+    btnAgregar.addEventListener('click', async function () {
+      const enlace = campoEnlace.value.trim();
+      const texto = m.pedirTexto ? campoTexto.value.trim() : '';
+      if (!enlaceSeguro(enlace)) {
+        msg.textContent = 'El enlace debe empezar con https://';
+        return;
+      }
+      btnAgregar.disabled = true;
+      try {
+        await db.collection(m.coleccion).add({
+          enlace: enlace,
+          texto: texto,
+          autor: auth.currentUser ? auth.currentUser.email : '',
+          fecha: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        campoEnlace.value = '';
+        campoTexto.value = '';
+        msg.textContent = 'Agregado.';
+        await cargar();
+      } catch (err) {
+        msg.textContent = 'No se pudo guardar: ' + err.message;
+      } finally {
+        btnAgregar.disabled = false;
+      }
+    });
+
+    sec.cargar = cargar;
     return sec;
   }
 

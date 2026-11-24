@@ -162,5 +162,19 @@ const MODULOS = [
     descripcion: 'BObjetivo: encontrar dominios parecidos al de la marca',
     abrirUrl: 'paginas/lookalike.html',
     boton: 'Launchhhh'
+  },
+  {
+    id: 'mod4',
+    titulo: 'Módulo 4: databases found',
+    descripcion: 'Ojo necesito que los cambios los podamos ver todos',
+    coleccion: 'mod4',
+    pedirTexto: true
+  },
+  {
+    id: 'mod5',
+    titulo: 'Módulo 5: OSINT research',
+    descripcion: 'Sube aquí el enlace de tu HTML de investigación. Los demás pueden abrirlo o descargarlo desde el enlace.',
+    coleccion: 'mod5',
+    pedirTexto: false
   }
 ];
