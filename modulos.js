@@ -129,7 +129,7 @@ function extraerDatosLog(logText) {
 const MODULOS = [
   {
     id: 'mod2',
-    titulo: 'Módulo 2: Azure Tool',
+    titulo: 'Módulo 2: Azure Tools',
     descripcion: 'input: Pega el log de azure. Output: Datos necesarios para bitacora.  ' +
       'fecha, usuario, identidad, aplicación, IP, país, ciudad, dispositivo, motivo, resultado de ' +
       'autenticación y notas . El resultado se viene separado por celdas, por lo que se puede pegar en excel',
@@ -146,20 +146,35 @@ const MODULOS = [
   },
   {
     id: 'mod3',
-    titulo: 'Módulo 3',
-    descripcion: 'Seguimos trabajando en este modulo',
+    titulo: 'Tools: Azure Tool',
+    oculto: true,
+    descripcion: 'Herramienta de Azure: extrae los datos del log para la bitacora.',
     video: '',
-    entrada: 'Sigo terminando la logica de esta parte',
+    entrada: 'Coloca aqui el log :)',
     ejecutar: function (texto) {
-      // TODO: aqui va la logica del modulo 3 (port del Python a JavaScript).
-      throw new Error('La lógica de este módulo todavía no está conectada.');
+      // Misma logica que el Modulo 2 (Azure Tools).
+      return MODULOS[0].ejecutar(texto);
     }
   },
   {
     id: 'lookalike',
-    titulo: 'Lookalike',
+    titulo: 'Módulo 3: Lookalike',
     descripcion: 'BObjetivo: encontrar dominios parecidos al de la marca',
     abrirUrl: 'paginas/lookalike.html',
     boton: 'Launchhhh'
+  },
+  {
+    id: 'mod4',
+    titulo: 'Módulo 4: databases found',
+    descripcion: 'Ojo necesito que los cambios los podamos ver todos',
+    coleccion: 'mod4',
+    pedirTexto: true
+  },
+  {
+    id: 'mod5',
+    titulo: 'Módulo 5: OSINT research',
+    descripcion: 'Sube aquí el enlace de tu HTML de investigación. Los demás pueden abrirlo o descargarlo desde el enlace.',
+    coleccion: 'mod5',
+    pedirTexto: false
   }
 ];
