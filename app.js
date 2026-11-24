@@ -90,9 +90,43 @@
   }
 
   function construirMenu() {
-    const items = [{ id: 'busqueda', titulo: 'Búsqueda' }].concat(
-      MODULOS.map(function (m) { return { id: m.id, titulo: m.titulo }; })
+    const items = [{ id: 'busqueda', titulo: 'Módulo 1: Marketplace' }].concat(
+      MODULOS.filter(function (m) { return !m.oculto; })
+        .map(function (m) { return { id: m.id, titulo: m.titulo }; })
     );
+    const ocultos = MODULOS.filter(function (m) { return m.oculto; });
+
+    // Boton ▸ a la izquierda del Modulo 1: despliega las herramientas ocultas
+    const desplegable = document.createElement('span');
+    desplegable.style.position = 'relative';
+    desplegable.style.display = 'inline-block';
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.textContent = '▸';
+    toggle.setAttribute('aria-label', 'Mostrar herramientas');
+    toggle.setAttribute('aria-expanded', 'false');
+    const panel = document.createElement('span');
+    panel.hidden = true;
+    panel.style.display = 'block';
+    ocultos.forEach(function (m) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.dataset.id = m.id;
+      b.textContent = m.titulo;
+      b.addEventListener('click', function () {
+        panel.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        mostrarModulo(m.id);
+      });
+      panel.appendChild(b);
+    });
+    toggle.addEventListener('click', function () {
+      panel.hidden = !panel.hidden;
+      toggle.setAttribute('aria-expanded', String(!panel.hidden));
+    });
+    desplegable.append(toggle, panel);
+    if (ocultos.length) $('menu').appendChild(desplegable);
+
     items.forEach(function (it) {
       const b = document.createElement('button');
       b.type = 'button';

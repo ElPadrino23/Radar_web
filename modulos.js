@@ -129,7 +129,7 @@ function extraerDatosLog(logText) {
 const MODULOS = [
   {
     id: 'mod2',
-    titulo: 'Módulo 2: Azure Tool',
+    titulo: 'Módulo 2: Azure Tools',
     descripcion: 'input: Pega el log de azure. Output: Datos necesarios para bitacora.  ' +
       'fecha, usuario, identidad, aplicación, IP, país, ciudad, dispositivo, motivo, resultado de ' +
       'autenticación y notas . El resultado se viene separado por celdas, por lo que se puede pegar en excel',
@@ -146,7 +146,8 @@ const MODULOS = [
   },
   {
     id: 'mod3',
-    titulo: 'Módulo 3',
+    titulo: 'Tools: Azure Tool',
+    oculto: true,
     descripcion: 'Seguimos trabajando en este modulo',
     video: '',
     entrada: 'Sigo terminando la logica de esta parte',
@@ -157,7 +158,7 @@ const MODULOS = [
   },
   {
     id: 'lookalike',
-    titulo: 'Lookalike',
+    titulo: 'Módulo 3: Lookalike',
     descripcion: 'BObjetivo: encontrar dominios parecidos al de la marca',
     abrirUrl: 'paginas/lookalike.html',
     boton: 'Launchhhh'
